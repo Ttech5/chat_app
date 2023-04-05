@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "./login";
 import axios from "axios";
@@ -14,6 +14,13 @@ export const ContextProvider = ({ children }) => {
   const [activeChat, setActiveChat] = useState(null);
   const [chatMessages, setChatMessages] = useState({});
 
+  useEffect(() => {
+    let ws = retrieveUser();
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   const getActiveChat = () => {
     console.log(activeChat);
     return activeChat;
@@ -27,25 +34,40 @@ export const ContextProvider = ({ children }) => {
       });
       return;
     }
+    console.log(data);
+    console.log(friends);
+    let sender = friends.filter((friend) => friend.id == data.chat_id);
+    if (sender && user) {
+      sender =
+        sender[0].user_username == user.username
+          ? sender[0].friend_username
+          : sender[0].user_username;
+      console.log(sender);
+      console.log(user);
+    }
     chatMessages[data.chat_id].push(data);
     setChatMessages({ ...chatMessages });
   };
-  const retrieveUser = async () => {
+  const retrieveUser = () => {
     const accessToken = getAccessToken();
     if (!accessToken) navigator("/login");
     try {
-      const res = await axios.get("http://localhost:8000/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      setUser(res.data.user);
-      setFriends(res.data.friends);
+      axios
+        .get("http://localhost:8000/api/auth/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => {
+          setUser(res.data.user);
+          setFriends(res.data.friends);
+        });
 
       const ws = new WebSocket(
         `ws://localhost:8000/api/ws?access_token=${accessToken}`
       );
       ws.onopen = function (e) {};
+      ws.onclose = function (e) {};
       ws.onmessage = handleNewMessage;
       setWebsocket(ws);
       return ws;

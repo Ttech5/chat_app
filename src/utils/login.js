@@ -28,10 +28,10 @@ export const getUserDetails = async () => {
 };
 
 export const loginUser = async (username, password) => {
-  const base_url = process.env.BASE_URL;
+  // const base_url = process.env.BASE_URL;
   try {
     const res = await axios.post(
-      `${base_url}/api/auth/login`,
+      "http://localhost:8000/api/auth/login",
       {
         username,
         password,

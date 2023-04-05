@@ -19,6 +19,7 @@ export const Header = () => {
             alt="Profile Pics"
             className="rounded-full h-10"
           />
+          {user && <h2>{user.username}</h2>}
         </div>
         <div className="flex ">
           <img
@@ -35,7 +36,7 @@ export const Header = () => {
           {/* <img src={menu_open} alt="Profile Pics" className="rounded-full h-10" /> */}
         </div>
       </div>
-      {showAddFriend ? <AddFriendodal setter={setShowAddFriend} /> : null}
+      {showAddFriend && <AddFriendodal setter={setShowAddFriend} />}
     </>
   );
 };
