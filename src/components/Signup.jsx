@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { url } from "../config";
 export const Signup = () => {
   const navigator = useNavigate();
   const handleSubmit = async (e) => {
@@ -19,14 +19,11 @@ export const Signup = () => {
     else if (password != confirm_password) alert("Password Mismatch");
     else {
       try {
-        const res = await axios.post(
-          "http://localhost:8000/api/auth/register",
-          {
-            email,
-            username,
-            password,
-          }
-        );
+        const res = await axios.post(url, {
+          email,
+          username,
+          password,
+        });
         alert("Registered Successfully");
         navigator("/login");
       } catch (e) {

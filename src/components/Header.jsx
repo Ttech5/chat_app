@@ -9,7 +9,6 @@ import { TestContext } from "../utils/testContext";
 export const Header = () => {
   const [showAddFriend, setShowAddFriend] = useState(false);
   const { user } = useContext(TestContext);
-  console.log(user);
   return (
     <>
       <div className="pt-2 bg-[#02a698] flex justify-between px-2">

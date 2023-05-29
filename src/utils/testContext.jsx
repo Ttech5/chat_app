@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "./login";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { url, websocker_url } from "../config";
 export const TestContext = createContext();
 
 export const ContextProvider = ({ children }) => {
@@ -53,7 +53,7 @@ export const ContextProvider = ({ children }) => {
     if (!accessToken) navigator("/login");
     try {
       axios
-        .get("http://localhost:8000/api/auth/me", {
+        .get(`${url}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -64,7 +64,7 @@ export const ContextProvider = ({ children }) => {
         });
 
       const ws = new WebSocket(
-        `ws://localhost:8000/api/ws?access_token=${accessToken}`
+        `${websocker_url}/api/ws?access_token=${accessToken}`
       );
       ws.onopen = function (e) {};
       ws.onclose = function (e) {};
@@ -92,7 +92,7 @@ export const ContextProvider = ({ children }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/message",
+        `${url}/api/message/add`,
         { chatId, content, receiver },
         {
           headers: {
@@ -100,9 +100,10 @@ export const ContextProvider = ({ children }) => {
           },
         }
       );
-      chatMessages[chatId].push(res.data);
-      const copy = { ...chat };
-      setActiveChat(copy);
+      // chatMessages[chatId].push(res.data);
+      let copymessages = { ...chatMessages };
+      copymessages[chatId].push(res.data);
+      setChatMessages(copymessages);
     } catch (e) {
       console.log(e);
     }
@@ -125,14 +126,11 @@ export const ContextProvider = ({ children }) => {
     console.log("Fetching New Messages");
     const accessToken = getAccessToken();
     try {
-      const res = await axios.get(
-        `http://localhost:8000/api/message/?chat_id=${chatId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const res = await axios.get(`${url}/api/message/?chat_id=${chatId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       return res.data;
     } catch (e) {
       console.log(e);

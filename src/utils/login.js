@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { url } from "../config";
 export const getAccessToken = () => {
   return sessionStorage.getItem("accessToken");
 };
@@ -12,7 +13,7 @@ export const getUserDetails = async () => {
   const access_token = getAccessToken();
   console.log(access_token);
   try {
-    const res = await axios.get("http://localhost:8000/api/auth/me", {
+    const res = await axios.get(`${url}/api/auth/me`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -30,8 +31,10 @@ export const getUserDetails = async () => {
 export const loginUser = async (username, password) => {
   // const base_url = process.env.BASE_URL;
   try {
+    console.log("About to login");
+    console.log(`${url}/api/auth/login`);
     const res = await axios.post(
-      "http://localhost:8000/api/auth/login",
+      `${url}/api/auth/login`,
       {
         username,
         password,
@@ -45,10 +48,11 @@ export const loginUser = async (username, password) => {
     const access_token = res.data.access_token;
 
     sessionStorage.setItem("accessToken", access_token);
-
+    console.log("Access token");
     return true;
   } catch (e) {
     let errMsg = e.response.data.detail;
+    console.log(errMsg);
     toast.error(errMsg, { position: toast.POSITION.TOP_CENTER });
   }
 };

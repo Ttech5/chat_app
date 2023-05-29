@@ -3,7 +3,7 @@ import axios from "axios";
 import addIcon from "../assets/add.png";
 import { getUserDetails, getAccessToken } from "../utils/login";
 import { TestContext } from "../utils/testContext";
-
+import { url } from "../config";
 const Friend = ({ username, setter }) => {
   const { retrieveUser } = useContext(TestContext);
   const [canAdd, setCanAdd] = useState(true);
@@ -12,7 +12,7 @@ const Friend = ({ username, setter }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/friend/request?fiend_user_name=${username}`,
+        `${url}/api/friend/request?fiend_user_name=${username}`,
         {},
         {
           headers: {
@@ -57,9 +57,7 @@ export const AddFriendodal = ({ setter }) => {
 
     try {
       const timer = setTimeout(async () => {
-        const res = await axios.get(
-          `http://127.0.0.1:8000/api/users?username=${username}`
-        );
+        const res = await axios.get(`${url}/api/users?username=${username}`);
 
         let friendsUsername = friends.map((friend) =>
           friend.user_username == user.username

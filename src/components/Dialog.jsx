@@ -30,16 +30,26 @@ const Header = () => {
 
 export const Dialog = () => {
   const [messages, setChatMessages] = useState([]);
-  const { sendMessageToChat, activeChat, getChatMessages } =
+  const { sendMessageToChat, activeChat, chatMessages, getChatMessages } =
     useContext(TestContext);
 
+  const messageRef = useRef(null);
   const inputRef = useRef(null);
+
   const sendMessage = async () => {
     let msg = inputRef.current.value;
     if (!msg) return;
     await sendMessageToChat(msg, activeChat);
     inputRef.current.value = null;
   };
+
+  useEffect(() => {
+    console.log("Chat messages change");
+    messageRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [chatMessages]);
+
   useEffect(() => {
     async function fetchData() {
       let messages = await getChatMessages(activeChat.id);
@@ -49,16 +59,24 @@ export const Dialog = () => {
   }, []);
 
   return (
-    <div className="w-full mx-0 ">
+    <div className="h-screen flex flex-col">
       <Header />
-      <div className="flex flex-col  h-[595px]  overflow-y-scroll">
-        {messages.map((message) => (
-          <Message key={message.message_id} message={message} />
-        ))}
-      </div>
-      <div className="fixed bottom-0 w-full bg-gray-100 p-2 flex justify-between">
-        <input className="w-[90%] rounded-14" ref={inputRef} />
-        <img src={send} alt="send message" onClick={() => sendMessage()} />
+
+      <div className="flex  flex-col  flex-grow w-full ">
+        <div className="flex-grow overflow-y-scroll">
+          <div className="flex  flex-col ">
+            {messages.map((message) => (
+              <div key={message.message_id} ref={messageRef}>
+                <Message message={message} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="  w-full h-12   bg-gray-100  flex justify-between ">
+          <input className="w-[90%] rounded-14" ref={inputRef} />
+          <img src={send} alt="send message" onClick={() => sendMessage()} />
+        </div>
       </div>
     </div>
   );

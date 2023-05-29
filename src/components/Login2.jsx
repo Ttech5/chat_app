@@ -37,7 +37,7 @@ export const Login = () => {
               htmlFor="username"
               className="block text-sm font-semibold text-gray-800"
             >
-              Email
+              Username
             </label>
             <input
               type="text"
