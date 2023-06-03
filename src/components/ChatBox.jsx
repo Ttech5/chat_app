@@ -4,7 +4,6 @@ import { ChatContainer } from "./ChatContainer";
 export function ChatBox() {
   return (
     <div className="h-screen  w-full bg-white">
-      <Header />
       <ChatContainer />
     </div>
   );

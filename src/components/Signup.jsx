@@ -19,7 +19,7 @@ export const Signup = () => {
     else if (password != confirm_password) alert("Password Mismatch");
     else {
       try {
-        const res = await axios.post(url, {
+        const res = await axios.post(`${url}/api/auth/register`, {
           email,
           username,
           password,

@@ -15,16 +15,15 @@ export const ContextProvider = ({ children }) => {
   const [chatMessages, setChatMessages] = useState({});
 
   useEffect(() => {
+    console.log("Chat messages changed");
+  }, [chatMessages]);
+
+  useEffect(() => {
     let ws = retrieveUser();
     return () => {
       ws.close();
     };
   }, []);
-
-  const getActiveChat = () => {
-    console.log(activeChat);
-    return activeChat;
-  };
 
   const handleNewMessage = (event) => {
     let data = JSON.parse(event.data);
@@ -46,6 +45,7 @@ export const ContextProvider = ({ children }) => {
       console.log(user);
     }
     chatMessages[data.chat_id].push(data);
+
     setChatMessages({ ...chatMessages });
   };
   const retrieveUser = () => {
@@ -81,7 +81,6 @@ export const ContextProvider = ({ children }) => {
   };
 
   const sendMessageToChat = async (content, chat) => {
-    console.log(activeChat);
     const accessToken = getAccessToken();
     let chatId = chat.id;
 
@@ -100,10 +99,11 @@ export const ContextProvider = ({ children }) => {
           },
         }
       );
-      // chatMessages[chatId].push(res.data);
+
       let copymessages = { ...chatMessages };
       copymessages[chatId].push(res.data);
-      setChatMessages(copymessages);
+
+      setChatMessages({ ...copymessages });
     } catch (e) {
       console.log(e);
     }
@@ -137,14 +137,10 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
-  const getMostRecentMessage = (chatId) => {
-    let messages = chatMessages[chatId];
-    return messages[messages.length - 1];
-  };
-
   return (
     <TestContext.Provider
       value={{
+        chatMessages,
         retrieveUser,
         user,
         friends,

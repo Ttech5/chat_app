@@ -36,6 +36,22 @@ export const Dialog = () => {
   const messageRef = useRef(null);
   const inputRef = useRef(null);
 
+  messageRef.current?.scrollIntoView({
+    behavior: "smooth",
+  });
+
+  useEffect(() => {
+    messageRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [chatMessages]);
+
+  useEffect(() => {
+    messageRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, []);
+
   const sendMessage = async () => {
     let msg = inputRef.current.value;
     if (!msg) return;
@@ -44,39 +60,40 @@ export const Dialog = () => {
   };
 
   useEffect(() => {
-    console.log("Chat messages change");
-    messageRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
-  }, [chatMessages]);
-
-  useEffect(() => {
     async function fetchData() {
-      let messages = await getChatMessages(activeChat.id);
-      setChatMessages(messages);
+      let newmessages = await getChatMessages(activeChat.id);
+      setChatMessages(newmessages);
     }
     fetchData();
   }, []);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col ">
       <Header />
 
-      <div className="flex  flex-col  flex-grow w-full ">
-        <div className="flex-grow overflow-y-scroll">
-          <div className="flex  flex-col ">
-            {messages.map((message) => (
-              <div key={message.message_id} ref={messageRef}>
-                <Message message={message} />
-              </div>
-            ))}
+      <div
+        className="flex pb-12  flex-col flex-grow-0  overflow-y-scroll"
+        ref={messageRef}
+      >
+        {messages.map((message, index) => (
+          <div key={message.message_id} ref={messageRef}>
+            <Message message={message} />
           </div>
-        </div>
+        ))}
+      </div>
 
-        <div className="  w-full h-12   bg-gray-100  flex justify-between ">
-          <input className="w-[90%] rounded-14" ref={inputRef} />
-          <img src={send} alt="send message" onClick={() => sendMessage()} />
-        </div>
+      <div className="ml-1 rounded-xl fixed w-[98%] bottom-0  h-12 flex-shrink-0   bg-black bg-opacity-40  flex justify-between  ">
+        <input
+          className="caret-blue-500 pl-2   cursor-text w-full  color-blue bg-[#d1d7db] focus:ring-blue-200 ring-offset-2	 focus:ring-2	 rounded-xl outline-none"
+          ref={inputRef}
+          placeHolder="New Message"
+        />
+        <img
+          src={send}
+          alt="send message"
+          onClick={() => sendMessage()}
+          className=" fixed  right-2  lg:pr-4"
+        />
       </div>
     </div>
   );

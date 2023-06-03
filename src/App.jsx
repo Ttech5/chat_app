@@ -7,6 +7,7 @@ import { Signin } from "./components/Signin";
 import { ChatBox } from "./components/ChatBox";
 import { ContextProvider } from "./utils/testContext";
 import { Login } from "./components/Login2";
+import { Register } from "./components/Register";
 function App() {
   return (
     <>
@@ -21,7 +22,7 @@ function App() {
         />
 
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Signup />} />
+        <Route path="/register" element={<Register />} />
         {/* <Route path="/chat" element={<ChatBox />} /> */}
         <Route path="*" element={<p> Page Not Found </p>} />
       </Routes>

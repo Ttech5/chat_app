@@ -4,6 +4,7 @@ import { Chat } from "./Chat";
 import { Dialog } from "./Dialog";
 import { SearchBar } from "./SearchBar";
 import { TestContext } from "../utils/testContext";
+import { Header } from "./Header";
 
 export const ChatContainer = () => {
   const { friends, activeChat } = useContext(TestContext);
@@ -15,7 +16,8 @@ export const ChatContainer = () => {
         <Dialog />
       ) : (
         <>
-          <SearchBar />
+          <Header />
+          {/* <SearchBar /> */}
           <div className="w-full p-2">
             {friends.map((friend, index) => (
               <Chat key={index} friend={friend} />
